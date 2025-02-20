@@ -188,7 +188,18 @@
       name: "{{ site_user }}"
       state: present
     when: sites_available.stat.exists == False
-  
+
+  - name: Local Output
+    delegate_to: localhost
+    delegate_facts: true
+    run_once: true
+    vars:
+      site_user: "{{ username.stdout }}"
+      site_user_pass: "{{ password.stdout }}"
+    ansible.builtin.shell: |
+      echo {{ site_url }}'\t'{{ site_user }}'\t'{{ site_user_pass }}'\t'{{ php_version }} >> ~/site_index.txt
+    when: sites_available.stat.exists == False
+
   - name: Creating database user
     delegate_to: localhost
     delegate_facts: true
@@ -223,13 +234,3 @@
       - "Database Port: {{ db_port }}"
     when: sites_available.stat.exists == False
 
-  - name: Local Output
-    delegate_to: localhost
-    delegate_facts: true
-    run_once: true
-    vars:
-      site_user: "{{ username.stdout }}"
-      site_user_pass: "{{ password.stdout }}"
-    ansible.builtin.shell: |
-      echo {{ site_url }}'\t'{{ site_user }}'\t'{{ site_user_pass }}'\t'{{ php_version }} >> ~/site_index.txt
-    when: sites_available.stat.exists == False
