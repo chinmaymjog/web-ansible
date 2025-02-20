@@ -103,7 +103,7 @@
       name: apache2
       state: restarted
 
-  - name: Deleting databse user
+  - name: Deleting database user
     delegate_to: localhost
     delegate_facts: true
     run_once: true

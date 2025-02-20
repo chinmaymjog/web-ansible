@@ -189,7 +189,7 @@
       state: present
     when: sites_available.stat.exists == False
   
-  - name: Creating databse user
+  - name: Creating database user
     delegate_to: localhost
     delegate_facts: true
     run_once: true
@@ -219,8 +219,8 @@
       - "Database User: {{ site_user }}"
       - "Database Password: {{ site_user_pass }}"
       - "Database Name: {{ site_user }}"
-      - "Databse Host: {{ db_host }}"
-      - "Databse Port: {{ db_port }}"
+      - "Database Host: {{ db_host }}"
+      - "Database Port: {{ db_port }}"
     when: sites_available.stat.exists == False
 
   - name: Local Output
