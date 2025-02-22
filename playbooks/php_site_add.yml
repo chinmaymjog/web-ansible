@@ -32,7 +32,7 @@
     run_once: true  
     ansible.builtin.shell: |
       rndm=$(( 1 + $RANDOM % 1000))
-      user=$(echo {{ site_url }} | tr -d [.,-] | sed -e s/indus//g | cut -c 1-10)_$rndm
+      user=$(echo {{ site_url }} | tr -d [.,-] | sed -e s/preprod//g | cut -c 1-10)_$rndm
       echo $user
     register: username
     args:
@@ -174,6 +174,17 @@
       name: apache2
       state: restarted
 
+  - name: Local Output
+    delegate_to: localhost
+    delegate_facts: true
+    run_once: true
+    vars:
+      site_user: "{{ username.stdout }}"
+      site_user_pass: "{{ password.stdout }}"
+    ansible.builtin.shell: |
+      echo {{ site_url }}'\t'{{ site_user }}'\t'{{ site_user_pass }}'\t'{{ php_version }} >> ~/site_index.txt
+    when: sites_available.stat.exists == False
+
   - name: Creating database
     delegate_to: localhost
     delegate_facts: true
@@ -187,17 +198,6 @@
       login_password: "{{ db_pass }}"
       name: "{{ site_user }}"
       state: present
-    when: sites_available.stat.exists == False
-
-  - name: Local Output
-    delegate_to: localhost
-    delegate_facts: true
-    run_once: true
-    vars:
-      site_user: "{{ username.stdout }}"
-      site_user_pass: "{{ password.stdout }}"
-    ansible.builtin.shell: |
-      echo {{ site_url }}'\t'{{ site_user }}'\t'{{ site_user_pass }}'\t'{{ php_version }} >> ~/site_index.txt
     when: sites_available.stat.exists == False
 
   - name: Creating database user

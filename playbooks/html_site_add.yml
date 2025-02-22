@@ -26,7 +26,7 @@
     run_once: true
     ansible.builtin.shell: |
       rndm=$(( 1 + $RANDOM % 1000))
-      user=$(echo {{ site_url }} | tr -d [.,-] | sed -e s/indus//g | cut -c 1-10)_$rndm
+      user=$(echo {{ site_url }} | tr -d [.,-] | sed -e s/preprod//g | cut -c 1-10)_$rndm
       echo $user
     register: username
     args:
