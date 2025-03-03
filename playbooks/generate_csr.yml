@@ -2,8 +2,6 @@
 - name: Generate CSR for site
   become: true
   hosts: localhost
-  vars:
-    csr_path: /data/csr 
   tasks:
 
   - name: Create directory structure if does not exist 
